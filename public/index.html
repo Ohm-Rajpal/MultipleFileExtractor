@@ -7,9 +7,9 @@
 <body>
 <h1>Multiple file extractor</h1>
 
-<p>Try selecting more than one file when browsing for files.</p>
+<p>Put zip files here and specify the location you want the program to extract them</p>
 
-<form action="/extract" method="POST">
+<form action="http://localhost:3000/extract" method="POST" enctype="multipart/form-data">
     <label for="files">Select files:</label>
     <input type="file" id="files" name="files[]" multiple><br><br>
     <label for="extractPath">Specify extraction path:</label>
