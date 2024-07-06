@@ -1,64 +1,59 @@
 // imports
 import express from "express"
-import bodyParser from "body-parser";
-import {dirname} from "path";
-import {fileURLToPath} from "url";
+import bodyParser from "body-parser"
+import {dirname} from "path"
+import {fileURLToPath} from "url"
 import multer from "multer"
+import AdmZip from "adm-zip"
 
 const app = express()
 const port = 3000
 const __dirname = dirname(fileURLToPath(import.meta.url)) // get the os dir
 
-// for multer applications, diskstorage is required
-// credit: https://medium.com/@ali.r.riahi/nodejs-upload-best-practice-976062a267ba
+app.use(bodyParser.urlencoded({ extended: true }));
+
+// multer middleware
 const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, './uploads');
+    destination: function (req, file, cb) {
+        cb(null, './uploads')
     },
-    filename: (req, file, cb) => {
-        cb(null, file.fieldname + '-' + Date.now());
+    filename: function (req, file, cb) { // naming functionality
+        console.log(file.originalname)
+        cb(null, file.originalname)
     }
-});
+})
 
-const upload = multer({
-    storage,
-    limits: {
-        fileSize: 10000000 // 10 MB
-    },
-    fileFilter: (req, file, cb) => {
-        const allowedTypes = ['application/zip'];
+const upload = multer({ storage: storage })
 
-        if (!allowedTypes.includes(file.mimetype)) {
-            const error = new Error('Invalid file type');
-            error.code = 'INVALID_FILE_TYPE';
-            return cb(error, false);
+// post request
+app.post('/extract', upload.array('files'), (req, res) => {
+    // multer puts files in req.files
+    const fileArr = req.files
+    const endPath = req.body.extractPath
+
+    console.log(`File array type looks like this: ${typeof fileArr}`)
+    console.log(`This is the user end path: ${endPath}`)
+
+    // iterate over every file, unzip, place in chosen directory
+    fileArr.forEach(
+        (currentFile) => {
+            // get the zip file
+            const zipFile = new AdmZip(currentFile.path)
+            // extract
+            zipFile.extractAllTo(endPath)
         }
-
-        cb(null, true);
-    }
+    );
+    res.send('Successful file extraction!')
 });
 
-module.exports = upload;
-
-// parse application/x-www-form-urlencoded
-app.use(bodyParser.urlencoded({ extended: true }))
-
-// create middleware
-function processMultipleFiles(req, res, next) {
-    // file processing here
-    console.log(req.body)
-    next()
-}
-
-// run the custom middleware
-app.use(processMultipleFiles)
-
-// post request to handle the button click
-app.post('/extract', (req, res) => {
-    // res.sendFile() // send html file that shows a completion screen
+// server the initial html file
+app.get('/', (req, res) => {
+    res.sendFile(__dirname + '/public/index.html')
 })
 
 // listen to the port
 app.listen(port, () => {
     console.log(`Multiple file extractor listening on port ${port}`)
 })
+
+export default upload;
