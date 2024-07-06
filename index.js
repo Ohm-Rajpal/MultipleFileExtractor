@@ -14,7 +14,7 @@ app.use(bodyParser.urlencoded({ extended: true }))
 // create middleware
 function processMultipleFiles(req, res, next) {
     // file processing here
-
+    console.log(req.body)
     next()
 }
 
