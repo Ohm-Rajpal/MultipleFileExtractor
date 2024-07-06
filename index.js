@@ -9,7 +9,7 @@ import AdmZip from "adm-zip"
 import fs from "fs"
 
 const app = express()
-const port = 3000
+const port = 8000
 const __dirname = dirname(fileURLToPath(import.meta.url)) // get the os dir
 
 app.use(bodyParser.urlencoded({ extended: true }));
