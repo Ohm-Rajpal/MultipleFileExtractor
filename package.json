@@ -2,5 +2,23 @@
   "dependencies": {
     "body-parser": "^1.20.2",
     "express": "^4.19.2"
-  }
+  },
+  "name": "multiplefileextractor",
+  "version": "1.0.0",
+  "description": "Extract multiple files at once and place them in a location that I choose",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Ohm-Rajpal/MultipleFileExtractor.git"
+  },
+  "author": "Ohm Rajpal",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Ohm-Rajpal/MultipleFileExtractor/issues"
+  },
+  "homepage": "https://github.com/Ohm-Rajpal/MultipleFileExtractor#readme"
 }
